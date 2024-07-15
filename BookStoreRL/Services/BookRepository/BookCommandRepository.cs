@@ -1,11 +1,11 @@
 ﻿using BookStoreRL.Entity;
 using BookStoreRL.CustomExceptions;
-using BookStoreRL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using BookStoreRL.Interfaces.BookRepository;
 
-namespace BookStoreRL.Services
+namespace BookStoreRL.Services.BookRepository
 {
     public class BookCommandRepository : IBookCommandRepository
     {

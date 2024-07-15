@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStoreRL.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20240715084840_createUserAndBook")]
+    [Migration("20240715093059_createUserAndBook")]
     partial class createUserAndBook
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,7 @@ namespace BookStoreRL.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -64,7 +64,7 @@ namespace BookStoreRL.Migrations
                     b.HasIndex("Phonenumber")
                         .IsUnique();
 
-                    b.HasIndex("UserName")
+                    b.HasIndex("UserName", "Role")
                         .IsUnique();
 
                     b.ToTable("Users");

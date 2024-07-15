@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UserModelLayer;
 
-namespace BookStoreRL.Interfaces
+namespace BookStoreRL.Interfaces.UserRepository
 {
     public interface IUserCommandRepository
     {

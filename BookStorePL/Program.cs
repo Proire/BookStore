@@ -1,8 +1,10 @@
 using BookStoreBL;
 using BookStoreRL;
 using BookStoreRL.CQRS.Handlers.UserHandlers;
-using BookStoreRL.Interfaces;
-using BookStoreRL.Services;
+using BookStoreRL.Interfaces.BookRepository;
+using BookStoreRL.Interfaces.UserRepository;
+using BookStoreRL.Services.BookRepository;
+using BookStoreRL.Services.UserRepository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

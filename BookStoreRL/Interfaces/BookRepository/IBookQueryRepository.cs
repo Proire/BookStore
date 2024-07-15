@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStoreRL.Interfaces
+namespace BookStoreRL.Interfaces.BookRepository
 {
     public interface IBookQueryRepository
     {

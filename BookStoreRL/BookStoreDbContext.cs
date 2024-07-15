@@ -24,7 +24,7 @@ namespace BookStoreRL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.UserName)
+                .HasIndex(u => new { u.UserName, u.Role })
                 .IsUnique();
 
             modelBuilder.Entity<User>()

@@ -22,7 +22,7 @@ namespace BookStorePL.Controllers
         }
 
         [HttpPost]
-        [Route("/create")]
+        [Route("/createBook")]
         public async Task<ResponseModel<string>> CreateBook([FromBody] BookRegistrationModel bookModel)
         {
             try

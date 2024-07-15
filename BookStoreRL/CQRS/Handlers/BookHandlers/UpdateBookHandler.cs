@@ -1,6 +1,6 @@
 ﻿using BookStoreRL.CustomExceptions;
 using BookStoreRL.Entity;
-using BookStoreRL.Interfaces;
+using BookStoreRL.Interfaces.BookRepository;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;

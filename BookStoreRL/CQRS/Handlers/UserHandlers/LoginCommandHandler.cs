@@ -1,6 +1,6 @@
 ﻿using BookStoreML;
 using BookStoreRL.CQRS.Commands.UserCommands;
-using BookStoreRL.Interfaces;
+using BookStoreRL.Interfaces.UserRepository;
 using MediatR;
 using System;
 using System.Collections.Generic;

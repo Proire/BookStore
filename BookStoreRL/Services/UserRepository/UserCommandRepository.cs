@@ -1,12 +1,12 @@
 ﻿using BookStoreML;
 using BookStoreRL.CustomExceptions;
-using BookStoreRL.Interfaces;
+using BookStoreRL.Interfaces.UserRepository;
 using BookStoreRL.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using UserModelLayer;
 
-namespace BookStoreRL.Services
+namespace BookStoreRL.Services.UserRepository
 {
     public class UserCommandRepository : IUserCommandRepository
     {
@@ -51,7 +51,7 @@ namespace BookStoreRL.Services
             }
         }
 
-        
+
 
 
         public async Task UpdateAsync(User user)

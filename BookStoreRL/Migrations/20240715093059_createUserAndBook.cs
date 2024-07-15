@@ -44,7 +44,7 @@ namespace BookStoreRL.Migrations
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Phonenumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -60,9 +60,9 @@ namespace BookStoreRL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserName",
+                name: "IX_Users_UserName_Role",
                 table: "Users",
-                column: "UserName",
+                columns: new[] { "UserName", "Role" },
                 unique: true);
         }
 

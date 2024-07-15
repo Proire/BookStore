@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookStoreRL.Interfaces
+namespace BookStoreRL.Interfaces.UserRepository
 {
     public interface IUserQueryRepository
     {

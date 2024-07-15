@@ -51,7 +51,7 @@ namespace BookStoreRL.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -62,7 +62,7 @@ namespace BookStoreRL.Migrations
                     b.HasIndex("Phonenumber")
                         .IsUnique();
 
-                    b.HasIndex("UserName")
+                    b.HasIndex("UserName", "Role")
                         .IsUnique();
 
                     b.ToTable("Users");

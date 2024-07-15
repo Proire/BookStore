@@ -1,13 +1,6 @@
 ﻿using BookStoreML;
-using BookStoreRL.CQRS.Commands;
 using BookStoreRL.CQRS.Commands.UserCommands;
-using BookStoreRL.CQRS.Queries;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UserModelLayer;
 
 namespace BookStoreBL

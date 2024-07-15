@@ -1,6 +1,6 @@
 ﻿using BookStoreML;
 using BookStoreRL.CQRS.Commands.UserCommands;
-using BookStoreRL.Interfaces;
+using BookStoreRL.Interfaces.UserRepository;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,7 @@ namespace BookStoreRL.CQRS.Handlers.UserHandlers
                 Phonenumber = request.Phonenumber,
                 DateOfBirth = request.DateOfBirth
             };
+            Console.WriteLine(user.Id);
 
             await _repository.AddAsync(user);
             return user;

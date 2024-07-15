@@ -1,12 +1,12 @@
 ﻿using BookStoreML;
 using BookStoreRL.CustomExceptions;
-using BookStoreRL.Interfaces;
+using BookStoreRL.Interfaces.UserRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStoreRL.Services
+namespace BookStoreRL.Services.UserRepository
 {
     public class UserQueryRepository : IUserQueryRepository
     {
