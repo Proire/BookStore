@@ -23,5 +23,11 @@ namespace BookStoreBL.CartService
             AddCartItemCommand command = new AddCartItemCommand(userid, bookid, quantity);
             await _mediator.Send(command);
         }
+
+        public async Task UpdateQuantityAsync(int userid, int bookid, int quantity)
+        {
+            UpdateQuantityCommand command = new UpdateQuantityCommand(userid, bookid,quantity);
+            await _mediator.Send(command);
+        }
     }
 }

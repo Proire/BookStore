@@ -59,5 +59,43 @@ namespace BookStorePL.Controllers
                 return responseModel;
             }
         }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpPut]
+        [Route("/updatequantity/{bookId}")]
+        public async Task<ResponseModel<Cart>> UpdateQuantityAsync(int bookId, [FromBody] UpdateQuantityModel updateQuantityModel)
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                await _cartService.UpdateQuantityAsync(userId, bookId, updateQuantityModel.Quantity);
+
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = "Book quantity updated successfully.",
+                    Status = true
+                };
+                return responseModel;
+            }
+            catch (CartException ex)
+            {
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = ex.Message,
+                    Status = false
+                };
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                };
+                return responseModel;
+            }
+        }
+
     }
 }

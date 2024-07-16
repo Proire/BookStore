@@ -10,5 +10,7 @@ namespace BookStoreBL.CartService
     public interface ICartService
     {
         Task AddBookToCartAsync(int userid, int bookid, int quantity);
+
+        Task UpdateQuantityAsync(int userid, int bookid, int quantity);
     }
 }

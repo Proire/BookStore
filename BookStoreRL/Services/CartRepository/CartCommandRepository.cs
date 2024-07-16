@@ -48,9 +48,9 @@ namespace BookStoreRL.Services.CardRepository
                 if (existingCartItem != null)
                 {
                     // If the book is already in the cart, update the quantity
-                    if (book.StockQuantity >= existingCartItem.QuantityToPurchase + quantity)
+                    if (book.StockQuantity >=  quantity)
                     {
-                        existingCartItem.QuantityToPurchase += quantity;
+                        existingCartItem.QuantityToPurchase = quantity;
                     }
                     else
                     {
@@ -89,5 +89,72 @@ namespace BookStoreRL.Services.CardRepository
                 throw new CartException("An unexpected error occurred.", ex);
             }
         }
+
+        public async Task CartItemQuantityAsync(int userId, int bookId, int quantity)
+        {
+            try
+            {
+                // Find the user's cart
+                var cart = await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId);
+
+                // If the cart is null, create a new cart for the user
+                if (cart == null)
+                {
+                    throw new CartException("Cart not Found");
+                }
+
+                // Check if the book is already in the cart
+                var existingCartItem = cart.CartItems.FirstOrDefault(ci => ci.BookId == bookId);
+                var book = await _context.Books.FindAsync(bookId);
+                if (book == null)
+                {
+                    throw new CartException("Book not found.");
+                }
+
+                if (existingCartItem != null)
+                {
+                    // If the book is already in the cart, update the quantity
+                    if (book.StockQuantity >= quantity)
+                    {
+                        existingCartItem.QuantityToPurchase = quantity;
+                    }
+                    else
+                    {
+                        throw new CartException("Book out of stock.");
+                    }
+                }
+                else
+                {
+                    // If the book is not in the cart, add a new cart item
+                    if (book.StockQuantity >= quantity)
+                    {
+                        var cartItem = new CartItem
+                        {
+                            BookId = bookId,
+                            QuantityToPurchase = quantity
+                        };
+                        cart.CartItems.Add(cartItem);
+                    }
+                    else
+                    {
+                        throw new CartException("Book out of stock.");
+                    }
+                }
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handle database update exceptions
+                throw new CartException("An error occurred while updating the cart.", ex);
+            }
+            catch (Exception ex)
+            {
+                // Handle all other exceptions
+                throw new CartException("An unexpected error occurred.", ex);
+            }
+        }
+
     }
 }
