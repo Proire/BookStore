@@ -24,5 +24,7 @@ namespace BookStoreML
 
         public DateTime DateOfBirth { get; set; } = new DateTime();
 
+        public Cart? Cart { get; set; }
+
     }
 }

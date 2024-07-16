@@ -14,6 +14,8 @@ namespace BookStoreRL
         public DbSet<User> Users { get; set; }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
@@ -52,6 +54,20 @@ namespace BookStoreRL
                 entity.Property(e => e.StockQuantity).IsRequired();
                 entity.Property(e => e.Rating).HasColumnType("float");
             });
+
+            // Configure one-to-one relationship between User and Cart
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .IsRequired();
+
+            // Configure one-to-many relationship between Cart and CartItem
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId)
+                .IsRequired();
 
         }
     }

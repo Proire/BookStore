@@ -26,6 +26,6 @@ namespace BookStoreRL.Entity
         public string CoverImageUrl { get; set; } = string.Empty;   
         public int StockQuantity { get; set; }
         public double Rating { get; set; }
-    }
 
+    }
 }

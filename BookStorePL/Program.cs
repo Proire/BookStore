@@ -10,6 +10,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UserRLL.Utilities;
 using System.Text;
+using BookStoreRL.Interfaces.CardRepository;
+using BookStoreRL.Services.CardRepository;
+using BookStoreBL.CartService;
 
 internal class Program
 {
@@ -28,6 +31,8 @@ internal class Program
         builder.Services.AddScoped<IBookCommandRepository, BookCommandRepository>();   
         builder.Services.AddScoped<IBookQueryRepository, BookQueryRepository>();    
 
+        builder.Services.AddScoped<ICartCommandRepository, CartCommandRepository>(); 
+
         // Mediator service
         builder.Services.AddMediatR(typeof(Program).Assembly);
 
@@ -36,6 +41,7 @@ internal class Program
         // Business layer services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IBookService, BookService>();
+        builder.Services.AddScoped<ICartService, CartService>();    
 
         // utility services
         builder.Services.AddScoped<JwtTokenGenerator>();
