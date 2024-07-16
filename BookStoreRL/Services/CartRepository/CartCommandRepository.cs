@@ -156,5 +156,45 @@ namespace BookStoreRL.Services.CardRepository
             }
         }
 
+        public async Task DeleteBookFromCartAsync(int userId, int bookId)
+        {
+            try
+            {
+                // Find the user's cart with the specified userId
+                var cart = await _context.Carts
+                    .Include(c => c.CartItems)
+                    .FirstOrDefaultAsync(c => c.UserId == userId);
+
+                if (cart == null)
+                {
+                    throw new CartException("Cart not found for user.");
+                }
+
+                // Find the cart item with the specified bookId
+                var cartItem = cart.CartItems.FirstOrDefault(ci => ci.BookId == bookId);
+
+                if (cartItem != null)
+                {
+                    // Remove the cart item
+                    cart.CartItems.Remove(cartItem);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new CartException("Book not found in the cart.");
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handle database update exceptions
+                throw new CartException("An error occurred while updating the cart.", ex);
+            }
+            catch (Exception ex)
+            {
+                // Handle all other exceptions
+                throw new CartException("An unexpected error occurred.", ex);
+            }
+        }
+
     }
 }

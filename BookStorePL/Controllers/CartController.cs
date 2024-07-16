@@ -97,5 +97,45 @@ namespace BookStorePL.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpDelete]
+        [Route("/deletebook/{bookId}")]
+        public async Task<ResponseModel<Cart>> DeleteBookFromCartAsync(int bookId)
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                // Call the service method to delete the book from the cart
+                await _cartService.DeleteBookFromCartAsync(userId, bookId);
+
+                // Prepare and return the response model
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = "Book removed from cart successfully.",
+                    Status = true
+                };
+                return responseModel;
+            }
+            catch (CartException ex)
+            {
+                // Handle specific cart exceptions
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = ex.Message,
+                    Status = false
+                };
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                // Handle all other exceptions
+                ResponseModel<Cart> responseModel = new ResponseModel<Cart>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                };
+                return responseModel;
+            }
+        }
     }
 }

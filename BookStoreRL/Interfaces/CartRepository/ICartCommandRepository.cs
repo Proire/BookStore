@@ -13,5 +13,7 @@ namespace BookStoreRL.Interfaces.CardRepository
         Task AddBooktoCartAsync(int userid, int bookid, int quantity);
 
         Task CartItemQuantityAsync(int userid, int bookid, int quantity);
+
+        Task DeleteBookFromCartAsync(int userid,int bookid);
     }
 }

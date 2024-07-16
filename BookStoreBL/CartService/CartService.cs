@@ -24,6 +24,12 @@ namespace BookStoreBL.CartService
             await _mediator.Send(command);
         }
 
+        public async Task DeleteBookFromCartAsync(int userid, int bookid)
+        {
+            DeleteCartItemCommand command = new DeleteCartItemCommand(userid, bookid);
+            await _mediator.Send(command);
+        }
+
         public async Task UpdateQuantityAsync(int userid, int bookid, int quantity)
         {
             UpdateQuantityCommand command = new UpdateQuantityCommand(userid, bookid,quantity);

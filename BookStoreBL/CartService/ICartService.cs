@@ -12,5 +12,7 @@ namespace BookStoreBL.CartService
         Task AddBookToCartAsync(int userid, int bookid, int quantity);
 
         Task UpdateQuantityAsync(int userid, int bookid, int quantity);
+
+        Task DeleteBookFromCartAsync(int userid, int bookid);  
     }
 }
