@@ -98,6 +98,54 @@ namespace BookStorePL.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpGet]
+        [Route("books")]
+        public async Task<ResponseModel<CartSummaryModel>> GetBooksFromCartAsync()
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                // Call the CartService method to get the cart summary
+                var result = await _cartService.GetBooksFromCartAsync(userId);
+
+                if (result == null)
+                {
+                    return new ResponseModel<CartSummaryModel>
+                    {
+                        Message = "No cart found for the user.",
+                        Status = false
+                    };
+                }
+
+                // Return the response model with success status
+                return new ResponseModel<CartSummaryModel>
+                {
+                    Data = result,
+                    Message = "Cart retrieved successfully.",
+                    Status = true
+                };
+            }
+            catch (CartException ex)
+            {
+                // Handle specific cart exceptions
+                return new ResponseModel<CartSummaryModel>
+                {
+                    Message = ex.Message,
+                    Status = false
+                };
+            }
+            catch (Exception ex)
+            {
+                // Handle all other exceptions
+                return new ResponseModel<CartSummaryModel>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                };
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpDelete]
         [Route("/deletebook/{bookId}")]
         public async Task<ResponseModel<Cart>> DeleteBookFromCartAsync(int bookId)

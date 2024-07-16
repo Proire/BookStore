@@ -13,6 +13,8 @@ using System.Text;
 using BookStoreRL.Interfaces.CardRepository;
 using BookStoreRL.Services.CardRepository;
 using BookStoreBL.CartService;
+using BookStoreRL.Interfaces.CartRepository;
+using BookStoreRL.Services.CartRepository;
 
 internal class Program
 {
@@ -32,6 +34,7 @@ internal class Program
         builder.Services.AddScoped<IBookQueryRepository, BookQueryRepository>();    
 
         builder.Services.AddScoped<ICartCommandRepository, CartCommandRepository>(); 
+        builder.Services.AddScoped<ICartQueryRepository, CartQueryRepository>();
 
         // Mediator service
         builder.Services.AddMediatR(typeof(Program).Assembly);

@@ -1,4 +1,5 @@
 ﻿using BookStoreRL.CQRS.Commands.CartCommands;
+using BookStoreRL.CQRS.Queries.CartQueries;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,12 @@ namespace BookStoreBL.CartService
         {
             DeleteCartItemCommand command = new DeleteCartItemCommand(userid, bookid);
             await _mediator.Send(command);
+        }
+
+        public async Task<CartSummaryModel> GetBooksFromCartAsync(int userid)
+        {
+            GetBooksFromCartQuery command = new GetBooksFromCartQuery(userid);
+            return await _mediator.Send(command); 
         }
 
         public async Task UpdateQuantityAsync(int userid, int bookid, int quantity)

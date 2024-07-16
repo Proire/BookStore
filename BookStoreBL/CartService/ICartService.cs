@@ -13,6 +13,8 @@ namespace BookStoreBL.CartService
 
         Task UpdateQuantityAsync(int userid, int bookid, int quantity);
 
-        Task DeleteBookFromCartAsync(int userid, int bookid);  
+        Task DeleteBookFromCartAsync(int userid, int bookid);
+
+        Task<CartSummaryModel> GetBooksFromCartAsync(int userid);
     }
 }
