@@ -1,6 +1,7 @@
 ﻿using BookStoreBL;
 using BookStoreML;
 using BookStoreRL.CustomExceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserModelLayer;
@@ -19,7 +20,7 @@ namespace BookStorePL.Controllers
         }
 
         [HttpPost]
-        [Route("/register")]
+        [Route("/registerUser")]
         public async Task<ResponseModel<User>> CreateUser([FromBody] UserRegistrationModel user)
         {
             try
@@ -43,19 +44,19 @@ namespace BookStorePL.Controllers
         }
 
         [HttpPost]
-        [Route("/login")]
-        public async Task<ResponseModel<User>> LoginAsync([FromBody] LoginModel model)
+        [Route("/user/login")]
+        public async Task<ResponseModel<string>> LoginAsync([FromBody] LoginModel model)
         {
             try
             {
                 // Call the asynchronous Login method from the business logic layer (BLL)
-                User user = await _userService.LoginUserAsync(model);
+                string token = await _userService.LoginUserAsync(model);
 
                 // Prepare the response model with user data
-                ResponseModel<User> responseModel = new ResponseModel<User>
+                ResponseModel<string> responseModel = new ResponseModel<string>
                 {
                     Message = "Logged In Successfully!",
-                    Data = user, // Return the user object
+                    Data = token, // Return the user object
                     Status = true
                 };
 
@@ -64,10 +65,10 @@ namespace BookStorePL.Controllers
             catch (UserException ex)
             {
                 // Handle the exception and prepare the response model
-                ResponseModel<User> responseModel = new ResponseModel<User>
+                ResponseModel<string> responseModel = new ResponseModel<string>
                 {
                     Message = ex.Message,
-                    Data = null, 
+                    Data = "Try Again", 
                     Status = false
                 };
 

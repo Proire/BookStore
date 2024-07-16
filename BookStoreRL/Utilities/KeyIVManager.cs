@@ -14,7 +14,7 @@ namespace BookStoreRL.Utilities
         // Class to represent the key and IV
         private class UserKeyIv
         {
-            public string UserName { get; set; }
+            public string UserName { get; set; } 
             public string Key { get; set; }
             public string Iv { get; set; }
         }

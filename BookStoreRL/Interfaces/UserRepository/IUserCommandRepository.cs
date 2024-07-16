@@ -7,8 +7,6 @@ namespace BookStoreRL.Interfaces.UserRepository
     public interface IUserCommandRepository
     {
         Task AddAsync(User user);
-        Task UpdateAsync(User user);
-        Task DeleteAsync(int userId);
-        Task<User> LoginUserAsync(LoginModel model);
+        Task<string> LoginUserAsync(LoginModel model);
     }
 }

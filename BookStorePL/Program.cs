@@ -1,12 +1,15 @@
 using BookStoreBL;
 using BookStoreRL;
 using BookStoreRL.CQRS.Handlers.UserHandlers;
+using Microsoft.IdentityModel.Tokens;
 using BookStoreRL.Interfaces.BookRepository;
 using BookStoreRL.Interfaces.UserRepository;
 using BookStoreRL.Services.BookRepository;
 using BookStoreRL.Services.UserRepository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using UserRLL.Utilities;
+using System.Text;
 
 internal class Program
 {
@@ -32,7 +35,76 @@ internal class Program
 
         // Business layer services
         builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IBookService, BookService>();    
+        builder.Services.AddScoped<IBookService, BookService>();
+
+        // utility services
+        builder.Services.AddScoped<JwtTokenGenerator>();
+
+
+        // JWT Configurations
+        // Add Appsettings Configuration Builder 
+        builder.Configuration.SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+        // Getting Values from AppSettings.json
+        var config = builder.Configuration;
+        var secretKey = Environment.GetEnvironmentVariable("SecretKey");
+        var issuer = config["Jwt:ValidIssuer"];
+        var audience = config["Jwt:ValidAudience"];
+
+        builder.Services.AddAuthentication().AddJwtBearer("AdminScheme", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? throw new Exception("Provide Secret Key")))
+            };
+        })
+        .AddJwtBearer("UserScheme", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? throw new Exception("Provide Secret Key")))
+            };
+        })
+        .AddJwtBearer("UserValidationScheme", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? throw new Exception("Provide Secret Key")))
+            };
+        })
+        .AddJwtBearer("EmailVerificationScheme", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? throw new Exception("Provide Secret Key")))
+            };
+        });
+
+
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

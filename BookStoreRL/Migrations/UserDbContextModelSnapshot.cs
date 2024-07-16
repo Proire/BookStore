@@ -35,7 +35,7 @@ namespace BookStoreRL.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -51,7 +51,7 @@ namespace BookStoreRL.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -59,10 +59,13 @@ namespace BookStoreRL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("Phonenumber")
                         .IsUnique();
 
-                    b.HasIndex("UserName", "Role")
+                    b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("Users");

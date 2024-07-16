@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreRL.CQRS.Commands.UserCommands
 {
-    public class LoginUserCommand : IRequest<User>
+    public class LoginUserCommand : IRequest<string>
     {
         public string UserName { get; set; }
 

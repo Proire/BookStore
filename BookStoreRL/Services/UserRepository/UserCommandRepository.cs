@@ -3,18 +3,22 @@ using BookStoreRL.CustomExceptions;
 using BookStoreRL.Interfaces.UserRepository;
 using BookStoreRL.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using UserModelLayer;
+using UserRLL.Utilities;
 
 namespace BookStoreRL.Services.UserRepository
 {
     public class UserCommandRepository : IUserCommandRepository
     {
         private readonly UserDbContext _context;
+        private readonly JwtTokenGenerator _jwtTokenGenerator;
 
-        public UserCommandRepository(UserDbContext context)
+        public UserCommandRepository(UserDbContext context, JwtTokenGenerator jwtTokenGenerator)
         {
             _context = context;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task AddAsync(User user)
@@ -32,6 +36,7 @@ namespace BookStoreRL.Services.UserRepository
 
                 // Hash the user's password using the generated key and IV
                 user.Password = PasswordHasher.HashPassword(user.Password, key, iv);
+
             }
 
             try
@@ -51,34 +56,7 @@ namespace BookStoreRL.Services.UserRepository
             }
         }
 
-
-
-
-        public async Task UpdateAsync(User user)
-        {
-            try
-            {
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                // Handle concurrency conflicts
-                throw new UserException("A concurrency conflict occurred while updating the user.", ex);
-            }
-            catch (DbUpdateException ex)
-            {
-                // Handle specific database update exceptions
-                throw new UserException("An error occurred while updating the user in the database.", ex);
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions
-                throw new UserException("An unexpected error occurred.", ex);
-            }
-        }
-
-        public async Task<User> LoginUserAsync(LoginModel model)
+        public async Task<string> LoginUserAsync(LoginModel model)
         {
             // Check if the user exists asynchronously
             bool isUser = await _context.Users.AnyAsync(x => x.UserName == model.UserName);
@@ -99,7 +77,13 @@ namespace BookStoreRL.Services.UserRepository
 
                     if (model.Password == decryptedPassword)
                     {
-                        return user;
+                        string token = string.Empty;
+                        if (user.Role == "User")
+                            token = _jwtTokenGenerator.GenerateUserToken(Convert.ToString(user.Id), user.UserName, TimeSpan.FromMinutes(15));
+                        else
+                            token = _jwtTokenGenerator.GenerateAdminToken(Convert.ToString(user.Id), user.UserName, TimeSpan.FromMinutes(15));
+
+                        return token;
                     }
 
                     throw new UserException("Wrong Password, Reenter Password");
@@ -109,34 +93,6 @@ namespace BookStoreRL.Services.UserRepository
             }
 
             throw new UserException("Invalid UserName, Register First");
-        }
-
-
-        public async Task DeleteAsync(int userId)
-        {
-            try
-            {
-                var user = await _context.Users.FindAsync(userId);
-                if (user != null)
-                {
-                    _context.Users.Remove(user);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    throw new UserException($"No user found with id: {userId}");
-                }
-            }
-            catch (DbUpdateException ex)
-            {
-                // Handle specific database update exceptions
-                throw new UserException("An error occurred while deleting the user from the database.", ex);
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions
-                throw new UserException("An unexpected error occurred.", ex);
-            }
         }
     }
 }

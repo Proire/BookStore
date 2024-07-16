@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookStoreRL.Entity;
 using UserModelLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStorePL.Controllers
 {
+    
     [ApiController]
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
@@ -21,6 +23,7 @@ namespace BookStorePL.Controllers
             _bookService = bookService;
         }
 
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [HttpPost]
         [Route("/createBook")]
         public async Task<ResponseModel<string>> CreateBook([FromBody] BookRegistrationModel bookModel)
@@ -48,6 +51,7 @@ namespace BookStorePL.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [HttpPut("{bookId}")]
         public async Task<ResponseModel<Book>> UpdateBook([FromBody] BookUpdateModel bookModel, int bookId)
         {
@@ -72,6 +76,7 @@ namespace BookStorePL.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [HttpDelete("{bookId}")]
         public async Task<ResponseModel<Book>> DeleteBook(int bookId)
         {

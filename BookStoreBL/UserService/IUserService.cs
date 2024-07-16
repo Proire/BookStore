@@ -9,6 +9,6 @@ namespace BookStoreBL
     {
         Task CreateUserAsync(UserRegistrationModel user, string role);
 
-        Task<User> LoginUserAsync(LoginModel login);
+        Task<string> LoginUserAsync(LoginModel login);
     }
 }

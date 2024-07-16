@@ -42,9 +42,9 @@ namespace BookStoreRL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phonenumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -54,15 +54,21 @@ namespace BookStoreRL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Phonenumber",
                 table: "Users",
                 column: "Phonenumber",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserName_Role",
+                name: "IX_Users_UserName",
                 table: "Users",
-                columns: new[] { "UserName", "Role" },
+                column: "UserName",
                 unique: true);
         }
 

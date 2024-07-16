@@ -1,6 +1,7 @@
 ﻿using BookStoreBL;
 using BookStoreML;
 using BookStoreRL.CustomExceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UserModelLayer;
@@ -43,6 +44,39 @@ namespace BookStorePL.Controllers
                     Message = ex.Message,
                     Status = false
                 };
+                return responseModel;
+            }
+        }
+
+        [HttpPost]
+        [Route("/admin/login")]
+        public async Task<ResponseModel<string>> LoginAsync([FromBody] LoginModel model)
+        {
+            try
+            {
+                // Call the asynchronous Login method from the business logic layer (BLL)
+                string token = await _userService.LoginUserAsync(model);
+
+                // Prepare the response model with user data
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "Admin Logged In Successfully!",
+                    Data = token, // Return the user object
+                    Status = true
+                };
+
+                return responseModel;
+            }
+            catch (UserException ex)
+            {
+                // Handle the exception and prepare the response model
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = ex.Message,
+                    Data = "Try Again",
+                    Status = false
+                };
+
                 return responseModel;
             }
         }

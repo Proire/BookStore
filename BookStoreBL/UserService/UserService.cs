@@ -20,7 +20,7 @@ namespace BookStoreBL
             await _mediator.Send(command);
         }
 
-        public async Task<User> LoginUserAsync(LoginModel login)
+        public async Task<string> LoginUserAsync(LoginModel login)
         {
             var command = new LoginUserCommand(login.UserName, login.Password);
             return await _mediator.Send(command);

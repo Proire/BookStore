@@ -11,7 +11,7 @@ using UserModelLayer;
 
 namespace BookStoreRL.CQRS.Handlers.UserHandlers
 {
-    public class LoginCommandHandler : IRequestHandler<LoginUserCommand, User>
+    public class LoginCommandHandler : IRequestHandler<LoginUserCommand, string>
     {
         private readonly IUserCommandRepository _repository;
 
@@ -20,11 +20,11 @@ namespace BookStoreRL.CQRS.Handlers.UserHandlers
             _repository = repository;
         }
 
-        public async Task<User> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var login = new LoginModel(request.UserName, request.Password);
-            var user = await _repository.LoginUserAsync(login);
-            return user;
+            var token = await _repository.LoginUserAsync(login);
+            return token;
         }
     }
 }
