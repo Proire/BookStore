@@ -1,6 +1,7 @@
 ﻿using BookStore.Models;
 using BookStoreML;
 using BookStoreRL.Entity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,51 @@ namespace BookStoreRL
 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
+        }
+
+        public async Task<Book> GetBookByIdAsync(int bookId)
+        {
+            var bookIdParam = new SqlParameter("@BookId", bookId);
+            var books = await Books.FromSqlRaw("EXEC GetBookById @BookId", bookIdParam).ToListAsync();
+            return books.FirstOrDefault();
+        }
+
+        public async Task<List<Book>> GetAllBooksAsync()
+        {
+            var books = await Books.FromSqlRaw("EXEC GetAllBooks").ToListAsync();
+            return books;
+        }
+        public async Task AddOrderAsync(Order order)
+        {
+            // Define the parameters for the stored procedure
+            var bookIdParam = new SqlParameter("@BookId", order.BookId);
+            var bookTitleParam = new SqlParameter("@BookTitle", order.BookTitle);
+            var quantityParam = new SqlParameter("@Quantity", order.Quantity);
+            var totalPriceParam = new SqlParameter("@TotalPrice", order.TotalPrice);
+            var userIdParam = new SqlParameter("@UserId", order.UserId);
+
+            // Execute the stored procedure
+            await Database.ExecuteSqlRawAsync(
+                "EXEC AddOrder @BookId, @BookTitle, @Quantity, @TotalPrice, @UserId",
+                bookIdParam, bookTitleParam, quantityParam, totalPriceParam, userIdParam
+            );
+        }
+
+        public async Task<List<Wishlist>> GetWishlistItemsByUserIdAsync(int userId)
+        {
+            var userIdParam = new SqlParameter("@UserId", userId);
+            return await Wishlists
+                .FromSqlRaw("EXEC GetWishlistItemsByUserId @UserId", userIdParam)
+                .ToListAsync();
+        }
+
+        // Method to get books by a list of IDs using stored procedure
+        public async Task<List<Book>> GetBooksByIdsAsync(string bookIds)
+        {
+            var bookIdsParam = new SqlParameter("@BookIds", bookIds);
+            return await Books
+                .FromSqlRaw("EXEC GetBooksByIds @BookIds", bookIdsParam)
+                .ToListAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

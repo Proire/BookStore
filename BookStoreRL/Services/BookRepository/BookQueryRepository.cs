@@ -21,7 +21,7 @@ namespace BookStoreRL.Services.BookRepository
         {
             try
             {
-                var book = await _context.Books.FindAsync(bookId);
+                var book = await _context.GetBookByIdAsync(bookId);
                 if (book == null)
                 {
                     throw new BookException($"No book found with id: {bookId}");
@@ -38,7 +38,7 @@ namespace BookStoreRL.Services.BookRepository
         {
             try
             {
-                var books = await _context.Books.ToListAsync();
+                var books = await _context.GetAllBooksAsync();
                 if (books.Count == 0)
                 {
                     throw new BookException("No books found.");

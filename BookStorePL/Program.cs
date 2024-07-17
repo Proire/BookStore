@@ -38,7 +38,6 @@ internal class Program
         
         // Register Repositories
         builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
-        builder.Services.AddScoped<IUserQueryRepository, UserQueryRepository>();
 
         builder.Services.AddScoped<IBookCommandRepository, BookCommandRepository>();   
         builder.Services.AddScoped<IBookQueryRepository, BookQueryRepository>();    

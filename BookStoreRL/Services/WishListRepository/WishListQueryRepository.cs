@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BookStoreRL.CustomExceptions;
+﻿using BookStoreRL.CustomExceptions;
 using BookStoreRL.Models;
 using BookStoreRL.Interfaces.WishListRepository;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStoreRL.Services.WishListRepository
 {
@@ -19,34 +18,35 @@ namespace BookStoreRL.Services.WishListRepository
 
         public async Task<IEnumerable<WishlistBookModel>> GetBooksFromWishListAsync(int userId)
         {
-            // Fetch the wishlist items for the specified user
-            var wishlistItems = await _context.Wishlists
-                .Where(w => w.UserId == userId)
-                .ToListAsync();
-
-            // Check if any wishlist items are found
-            if (wishlistItems == null || wishlistItems.Count == 0)
+            try
             {
-                throw new WishlistException("No items found in the wishlist for the given user.");
+                var wishlistItems = await _context.GetWishlistItemsByUserIdAsync(userId);
+
+                if (wishlistItems == null || !wishlistItems.Any())
+                {
+                    throw new WishlistException("No items found in the wishlist for the given user.");
+                }
+
+                var bookIds = string.Join(",", wishlistItems.Select(w => w.BookId));
+                var books = await _context.GetBooksByIdsAsync(bookIds);
+
+                var result = wishlistItems.Select(w => new WishlistBookModel
+                {
+                    BookId = w.BookId,
+                    Title = books.FirstOrDefault(b => b.Id == w.BookId)?.Title ?? string.Empty,
+                    Author = books.FirstOrDefault(b => b.Id == w.BookId)?.Author ?? string.Empty,
+                    Price = books.FirstOrDefault(b => b.Id == w.BookId)?.Price ?? 0,
+                    QuantityToPurchase = w.Quantity
+                }).ToList();
+
+                return result;
             }
-
-            // Retrieve the book details for the found wishlist items
-            var bookIds = wishlistItems.Select(w => w.BookId).ToList();
-            var books = await _context.Books
-                .Where(b => bookIds.Contains(b.Id))
-                .ToListAsync();
-
-            // Map the wishlist items and book details to WishlistBookModel
-            var result = wishlistItems.Select(w => new WishlistBookModel
+            catch (Exception ex)
             {
-                BookId = w.BookId,
-                Title = books.FirstOrDefault(b => b.Id == w.BookId)?.Title ?? string.Empty,
-                Author = books.FirstOrDefault(b => b.Id == w.BookId)?.Author ?? string.Empty,
-                Price = books.FirstOrDefault(b => b.Id == w.BookId)?.Price ?? 0,
-                QuantityToPurchase = w.Quantity
-            }).ToList();
-
-            return result;
+                // Log the exception
+                throw new WishlistException("An error occurred while retrieving wishlist items.", ex);
+            }
         }
+
     }
 }

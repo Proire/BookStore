@@ -1,11 +1,7 @@
 ﻿using BookStoreRL.CustomExceptions;
 using BookStoreRL.Entity;
 using BookStoreRL.Interfaces.OrderRepository;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStoreRL.Services.OrderRepository
@@ -23,21 +19,18 @@ namespace BookStoreRL.Services.OrderRepository
         {
             try
             {
-                // Add the order to the Orders DbSet
-                await _context.Orders.AddAsync(order);
+                // Call the DbContext method to execute the stored procedure
+                await _context.AddOrderAsync(order);
 
-                // Save the changes to the database
+                // Optionally, you can add further processing or validation here
+
+                // Save changes to the DbContext (if needed)
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                // Handle database update exceptions
-                throw new OrderException("An error occurred while updating the database.", ex);
             }
             catch (Exception ex)
             {
-                // Handle all other exceptions
-                throw new OrderException("An unexpected error occurred.", ex);
+                // Handle exceptions accordingly
+                throw new OrderException("An error occurred while adding the order.", ex);
             }
         }
     }
