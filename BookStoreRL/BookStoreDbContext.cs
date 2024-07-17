@@ -13,12 +13,14 @@ namespace BookStoreRL
     public class UserDbContext: DbContext
     {
         public DbSet<User> Users { get; set; }
-
         public DbSet<Book> Books { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-
         public DbSet<Wishlist> Wishlists { get; set; }
+
+        public DbSet<CustomerDetails> CustomerDetails { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
@@ -58,6 +60,12 @@ namespace BookStoreRL
                 entity.Property(e => e.Rating).HasColumnType("float");
             });
 
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
+            });
+
             // Configure one-to-one relationship between User and Cart
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Cart)
@@ -72,6 +80,18 @@ namespace BookStoreRL
                 .HasForeignKey(ci => ci.CartId)
                 .IsRequired();
 
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.CustomerDetails)
+               .WithOne(cd => cd.User)
+               .HasForeignKey<CustomerDetails>(cd => cd.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure one-to-many relationship between User and Order
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User)
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

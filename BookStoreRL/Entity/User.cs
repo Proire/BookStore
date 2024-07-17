@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BookStoreML
+namespace BookStoreRL
 {
     public class User
     {
@@ -26,5 +26,8 @@ namespace BookStoreML
 
         public Cart? Cart { get; set; }
 
+        public CustomerDetails? CustomerDetails { get; set; }
+
+        public ICollection<Order> Orders { get; set; }  
     }
 }

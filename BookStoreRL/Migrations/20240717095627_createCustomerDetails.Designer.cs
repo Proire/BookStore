@@ -4,6 +4,7 @@ using BookStoreRL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStoreRL.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240717095627_createCustomerDetails")]
+    partial class createCustomerDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,6 +51,55 @@ namespace BookStoreRL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Wishlists");
+                });
+
+            modelBuilder.Entity("BookStoreML.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phonenumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Phonenumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BookStoreRL.Entity.Book", b =>
@@ -207,86 +258,6 @@ namespace BookStoreRL.Migrations
                     b.ToTable("CustomerDetails");
                 });
 
-            modelBuilder.Entity("BookStoreRL.Entity.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BookTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("BookStoreRL.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phonenumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Phonenumber")
-                        .IsUnique();
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("BookStore.Models.Wishlist", b =>
                 {
                     b.HasOne("BookStoreRL.Entity.Book", "Book")
@@ -295,7 +266,7 @@ namespace BookStoreRL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookStoreRL.User", "User")
+                    b.HasOne("BookStoreML.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -308,7 +279,7 @@ namespace BookStoreRL.Migrations
 
             modelBuilder.Entity("BookStoreRL.Entity.Cart", b =>
                 {
-                    b.HasOne("BookStoreRL.User", "User")
+                    b.HasOne("BookStoreML.User", "User")
                         .WithOne("Cart")
                         .HasForeignKey("BookStoreRL.Entity.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -330,7 +301,7 @@ namespace BookStoreRL.Migrations
 
             modelBuilder.Entity("BookStoreRL.Entity.CustomerDetails", b =>
                 {
-                    b.HasOne("BookStoreRL.User", "User")
+                    b.HasOne("BookStoreML.User", "User")
                         .WithOne("CustomerDetails")
                         .HasForeignKey("BookStoreRL.Entity.CustomerDetails", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -339,29 +310,16 @@ namespace BookStoreRL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BookStoreRL.Entity.Order", b =>
+            modelBuilder.Entity("BookStoreML.User", b =>
                 {
-                    b.HasOne("BookStoreRL.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Cart");
 
-                    b.Navigation("User");
+                    b.Navigation("CustomerDetails");
                 });
 
             modelBuilder.Entity("BookStoreRL.Entity.Cart", b =>
                 {
                     b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("BookStoreRL.User", b =>
-                {
-                    b.Navigation("Cart");
-
-                    b.Navigation("CustomerDetails");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

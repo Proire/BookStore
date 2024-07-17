@@ -19,6 +19,12 @@ using BookStoreRL.Interfaces.WishListRepository;
 using BookStoreRL.Services.WishListRepository;
 using BookStoreBL.WishListService;
 using BookStoreRL.Services;
+using BookStoreRL.Interfaces.CustomerDetailsRepository;
+using BookStoreRL.Services.CustomerDetailsRepository;
+using BookStoreBL.CustomerDetailsService;
+using BookStoreRL.Interfaces.OrderRepository;
+using BookStoreRL.Services.OrderRepository;
+using BookStoreBL.OrderService;
 
 internal class Program
 {
@@ -43,6 +49,10 @@ internal class Program
         builder.Services.AddScoped<IWishListCommandRepository, WishListCommandRepository>();
         builder.Services.AddScoped<IWishListQueryRepository, WishListQueryRepository>();
 
+        builder.Services.AddScoped<ICustomerDetailsCommandRepository, CustomerDetailsCommandRepository>();
+
+        builder.Services.AddScoped<IOrderCommandRepository,OrderCommandRepository>();   
+
         // Mediator service
         builder.Services.AddMediatR(typeof(Program).Assembly);
 
@@ -53,6 +63,8 @@ internal class Program
         builder.Services.AddScoped<IBookService, BookService>();
         builder.Services.AddScoped<ICartService, CartService>();    
         builder.Services.AddScoped<IWishListService, WishlistService>();
+        builder.Services.AddScoped<ICustomerDetailsService, CustomerDetailsService>();
+        builder.Services.AddScoped<IOrderService, OrderService>();  
 
         // utility services
         builder.Services.AddScoped<JwtTokenGenerator>();
