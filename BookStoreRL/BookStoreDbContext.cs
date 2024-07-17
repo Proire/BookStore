@@ -1,4 +1,5 @@
-﻿using BookStoreML;
+﻿using BookStore.Models;
+using BookStoreML;
 using BookStoreRL.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,6 +17,8 @@ namespace BookStoreRL
         public DbSet<Book> Books { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+
+        public DbSet<Wishlist> Wishlists { get; set; }
 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {

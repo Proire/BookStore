@@ -15,6 +15,10 @@ using BookStoreRL.Services.CardRepository;
 using BookStoreBL.CartService;
 using BookStoreRL.Interfaces.CartRepository;
 using BookStoreRL.Services.CartRepository;
+using BookStoreRL.Interfaces.WishListRepository;
+using BookStoreRL.Services.WishListRepository;
+using BookStoreBL.WishListService;
+using BookStoreRL.Services;
 
 internal class Program
 {
@@ -36,6 +40,9 @@ internal class Program
         builder.Services.AddScoped<ICartCommandRepository, CartCommandRepository>(); 
         builder.Services.AddScoped<ICartQueryRepository, CartQueryRepository>();
 
+        builder.Services.AddScoped<IWishListCommandRepository, WishListCommandRepository>();
+        builder.Services.AddScoped<IWishListQueryRepository, WishListQueryRepository>();
+
         // Mediator service
         builder.Services.AddMediatR(typeof(Program).Assembly);
 
@@ -45,6 +52,7 @@ internal class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IBookService, BookService>();
         builder.Services.AddScoped<ICartService, CartService>();    
+        builder.Services.AddScoped<IWishListService, WishlistService>();
 
         // utility services
         builder.Services.AddScoped<JwtTokenGenerator>();
