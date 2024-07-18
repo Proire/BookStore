@@ -26,7 +26,7 @@ namespace BookStoreRL
 
         public Cart? Cart { get; set; }
 
-        public CustomerDetails? CustomerDetails { get; set; }
+        public ICollection<CustomerDetails>? CustomerDetails { get; set; }
 
         public ICollection<Order> Orders { get; set; }  
     }

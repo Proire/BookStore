@@ -49,6 +49,7 @@ internal class Program
         builder.Services.AddScoped<IWishListQueryRepository, WishListQueryRepository>();
 
         builder.Services.AddScoped<ICustomerDetailsCommandRepository, CustomerDetailsCommandRepository>();
+        builder.Services.AddScoped<ICustomerDetailsQueryRepostiory,CustomerDetailsQueryRepository>(); 
 
         builder.Services.AddScoped<IOrderCommandRepository,OrderCommandRepository>();   
 

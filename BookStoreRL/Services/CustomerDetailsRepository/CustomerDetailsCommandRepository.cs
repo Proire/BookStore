@@ -1,4 +1,6 @@
-﻿using BookStoreRL.Entity;
+﻿using BookStoreRL.CustomExceptions;
+using BookStoreRL.Entity;
+using BookStoreRL.Exceptions;
 using BookStoreRL.Interfaces.CustomerDetailsRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,7 +20,23 @@ namespace BookStoreRL.Services.CustomerDetailsRepository
             _context = context;
         }
 
-        public async Task AddOrUpdateCustomerDetailsAsync(CustomerDetails customerDetails)
+        public async Task AddCustomerDetailsAsync(CustomerDetails customerDetails)
+        {
+
+            try
+            {
+                // Add new customer details
+                _context.CustomerDetails.Add(customerDetails);
+            }
+            catch (Exception ex)
+            {
+                throw new CustomerDetailsException(ex.Message, ex);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateCustomerDetailsAsync(CustomerDetails customerDetails)
         {
             var existingCustomer = await _context.CustomerDetails
                 .FirstOrDefaultAsync(c => c.Id == customerDetails.Id);
@@ -37,8 +55,7 @@ namespace BookStoreRL.Services.CustomerDetailsRepository
             }
             else
             {
-                // Add new customer details
-                _context.CustomerDetails.Add(customerDetails);
+                throw new CustomerDetailsException($"Customer detail with Id : {customerDetails.Id} not found");
             }
 
             await _context.SaveChangesAsync();

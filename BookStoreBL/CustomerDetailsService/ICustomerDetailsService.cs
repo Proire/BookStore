@@ -11,6 +11,10 @@ namespace BookStoreBL.CustomerDetailsService
 {
     public interface ICustomerDetailsService
     {
-        Task AddOrUpdateCustomerDetailsAsync(CustomerDetailsModel details, int userId);
+        Task AddCustomerDetailsAsync(AddCustomerDetailsCommand details);
+        
+        Task UpdateCustomerDetailsAsync(UpdateCustomerDetailsCommand model);
+
+        Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid);
     }
 }

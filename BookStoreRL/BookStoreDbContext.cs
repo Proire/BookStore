@@ -127,10 +127,10 @@ namespace BookStoreRL
                 .IsRequired();
 
             modelBuilder.Entity<User>()
-               .HasOne(u => u.CustomerDetails)
+               .HasMany(u => u.CustomerDetails)
                .WithOne(cd => cd.User)
-               .HasForeignKey<CustomerDetails>(cd => cd.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .HasForeignKey(cd => cd.UserId)
+               .IsRequired();
 
             // Configure one-to-many relationship between User and Order
             modelBuilder.Entity<User>()

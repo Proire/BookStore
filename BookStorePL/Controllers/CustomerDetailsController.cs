@@ -1,20 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using BookStoreBL.CustomerDetailsService;
+using BookStoreRL.Commands;
+using BookStoreRL.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BookStoreRL.Models;
-using BookStoreRL.CustomExceptions;
-using BookStoreBL.CustomerDetailsService;
 using UserModelLayer;
-using BookStoreRL.Commands;
-using BookStoreML;
 
-namespace BookStorePL.Controllers
+namespace BookStoreAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CustomerDetailsController : ControllerBase
     {
         private readonly ICustomerDetailsService _customerDetailsService;
@@ -25,31 +22,88 @@ namespace BookStorePL.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
-        [HttpPut]
-        [Route("edit")]
-        public async Task<ResponseModel<string>> EditCustomerDetails([FromBody] CustomerDetailsModel editCustomerDetails)
+        [HttpPost]
+        [Route("add")]
+        public async Task<IActionResult> AddCustomerDetails([FromBody] AddCustomerDetailsCommand addCustomerDetails)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            addCustomerDetails.UserId = userId;
+
             try
             {
-                await _customerDetailsService.AddOrUpdateCustomerDetailsAsync(editCustomerDetails,userId);
+                await _customerDetailsService.AddCustomerDetailsAsync(addCustomerDetails);
 
-                ResponseModel<string> responseModel = new ResponseModel<string>
+                return Ok(new ResponseModel<string>
+                {
+                    Data = string.Empty,
+                    Message = "Customer details added successfully.",
+                    Status = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseModel<string>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                });
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpPut]
+        [Route("edit")]
+        public async Task<IActionResult> EditCustomerDetails([FromBody] UpdateCustomerDetailsCommand editCustomerDetails)
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            editCustomerDetails.UserId = userId;
+
+            try
+            {
+                await _customerDetailsService.UpdateCustomerDetailsAsync(editCustomerDetails);
+
+                return Ok(new ResponseModel<string>
                 {
                     Data = string.Empty,
                     Message = "Customer details updated successfully.",
                     Status = true
-                };
-                return responseModel;
+                });
             }
             catch (Exception ex)
             {
-                ResponseModel<string> responseModel = new ResponseModel<string>
+                return BadRequest(new ResponseModel<string>
                 {
                     Message = "An unexpected error occurred.",
                     Status = false
-                };
-                return responseModel;
+                });
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpGet]
+        [Route("get")]
+        public async Task<IActionResult> GetCustomerDetails()
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            try
+            {
+                ICollection<CustomerDetails> customerDetails = await _customerDetailsService.GetCustomerDetailsAsync(userId);
+
+                return Ok(new ResponseModel<ICollection<CustomerDetails>>
+                {
+                    Data = customerDetails,
+                    Message = "Customer details retrieved successfully.",
+                    Status = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseModel<string>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                });
             }
         }
     }

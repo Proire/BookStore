@@ -1,5 +1,6 @@
 ﻿using BookStoreML;
 using BookStoreRL.Commands;
+using BookStoreRL.CQRS.Queries.CartQueries;
 using BookStoreRL.Entity;
 using MediatR;
 using System;
@@ -19,10 +20,21 @@ namespace BookStoreBL.CustomerDetailsService
             _mediator = mediator;
         }
 
-        public async Task AddOrUpdateCustomerDetailsAsync(CustomerDetailsModel details,int userId)
+        public async Task AddCustomerDetailsAsync(AddCustomerDetailsCommand command)
         {
-            EditCustomerDetailsCommand command = new EditCustomerDetailsCommand(details.AddressType, details.FullAddress, details.City, details.Country, details.Zipcode, details.State, userId);
             await _mediator.Send(command);
         }
+
+        public async Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid)
+        {
+            GetCustomerDetailsQuery command = new GetCustomerDetailsQuery(userid);
+            return await _mediator.Send(command);
+        }
+
+        public async Task UpdateCustomerDetailsAsync(UpdateCustomerDetailsCommand command)
+        {
+            await _mediator.Send(command);
+        }
+
     }
 }

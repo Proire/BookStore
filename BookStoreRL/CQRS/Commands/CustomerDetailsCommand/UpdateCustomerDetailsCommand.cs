@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookStoreRL.Commands
 {
-    public class AddCustomerDetailsCommand : IRequest
+    public class UpdateCustomerDetailsCommand : IRequest
     {
+        public int Id { get; set; } 
         public string AddressType { get; set; } = string.Empty;
 
         public string FullAddress { get; set; } = string.Empty;
@@ -18,10 +19,11 @@ namespace BookStoreRL.Commands
 
         public string State { get; set; } = string.Empty;
 
-        public int UserId { get; set; }    
+        public int UserId { get; set; }
 
-        public AddCustomerDetailsCommand(string addressType, string fullAddress, string city, string country, string zipcode, string state, int userId)
+        public UpdateCustomerDetailsCommand(int id, string addressType, string fullAddress, string city, string country, string zipcode, string state, int userId)
         {
+            Id = id;
             AddressType = addressType;
             FullAddress = fullAddress;
             City = city;

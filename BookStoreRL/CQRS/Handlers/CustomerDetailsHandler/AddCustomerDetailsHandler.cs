@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace BookStoreRL.CQRS.Handlers.CustomerDetailsHandler
 {
-    public class EditCustomerDetailsHandler : IRequestHandler<EditCustomerDetailsCommand>
+    public class AddCustomerDetailsHandler : IRequestHandler<AddCustomerDetailsCommand>
     {
         private readonly ICustomerDetailsCommandRepository _repository;
 
-        public EditCustomerDetailsHandler(ICustomerDetailsCommandRepository repository)
+        public AddCustomerDetailsHandler(ICustomerDetailsCommandRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<Unit> Handle(EditCustomerDetailsCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(AddCustomerDetailsCommand request, CancellationToken cancellationToken)
         {
             // Create a CustomerDetails object from the command
             var customerDetails = new CustomerDetails
@@ -34,7 +34,7 @@ namespace BookStoreRL.CQRS.Handlers.CustomerDetailsHandler
             };
 
             // Pass the CustomerDetails object to the repository method
-            await _repository.AddOrUpdateCustomerDetailsAsync(customerDetails);
+            await _repository.AddCustomerDetailsAsync(customerDetails);
             return Unit.Value;
         }
     }
