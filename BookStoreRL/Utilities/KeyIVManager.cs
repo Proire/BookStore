@@ -51,6 +51,27 @@ namespace BookStoreRL.Utilities
             throw new ArgumentException("Key and IV not found for the given username.");
         }
 
+        // Update the key and IV for a specific username
+        public static void UpdateKeyAndIv(string userName, byte[] newKey, byte[] newIv)
+        {
+            var existingData = ReadAllKeysAndIvs();
+
+            if (existingData.TryGetValue(userName, out var userKeyIv))
+            {
+                userKeyIv.Key = Convert.ToBase64String(newKey);
+                userKeyIv.Iv = Convert.ToBase64String(newIv);
+
+                existingData[userName] = userKeyIv;
+
+                string jsonString = JsonSerializer.Serialize(existingData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(FilePath, jsonString);
+            }
+            else
+            {
+                throw new ArgumentException("Username not found. Cannot update key and IV.");
+            }
+        }
+
         // Read all keys and IVs from the JSON file
         private static Dictionary<string, UserKeyIv> ReadAllKeysAndIvs()
         {

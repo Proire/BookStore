@@ -10,5 +10,9 @@ namespace BookStoreBL
         Task CreateUserAsync(UserRegistrationModel user, string role);
 
         Task<string> LoginUserAsync(LoginModel login);
+
+        Task<string> ForgetPasswordAsync(string email);
+
+        Task ResetPassword(int userId, string password);
     }
 }

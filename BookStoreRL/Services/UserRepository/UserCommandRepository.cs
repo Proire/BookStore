@@ -14,11 +14,13 @@ namespace BookStoreRL.Services.UserRepository
     {
         private readonly UserDbContext _context;
         private readonly JwtTokenGenerator _jwtTokenGenerator;
+        private readonly EmailSender _emailSender;
 
-        public UserCommandRepository(UserDbContext context, JwtTokenGenerator jwtTokenGenerator)
+        public UserCommandRepository(UserDbContext context, JwtTokenGenerator jwtTokenGenerator, EmailSender emailSender)
         {
             _context = context;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _emailSender = emailSender;
         }
 
         public async Task AddAsync(User user)
@@ -93,6 +95,67 @@ namespace BookStoreRL.Services.UserRepository
             }
 
             throw new UserException("Invalid UserName, Register First");
+        }
+
+        public async Task<string> ForgetPassword(string email)
+        {
+            try
+            {
+                User? user = await _context.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    throw new UserException("Email Not Found. Register First");
+                }
+                string token = _jwtTokenGenerator.GenerateUserValidationToken(Convert.ToString(user.Id), TimeSpan.FromMinutes(15));
+                _emailSender.SendEmail(new EmailDTO() { To = user.Email, Subject = "Reset Password", Body = token });
+                return token;
+            }
+            catch (DbUpdateException ex)
+            {           
+                throw new UserException("An error occurred while adding the user to the database.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new UserException("An unexpected error occurred.", ex);
+            }
+        }
+
+        public async Task ResetPassword(int UserId, string password)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(p => p.Id == UserId);
+                if (user != null)
+                {
+                    // Generate a unique key and IV for the user
+                    using (Aes aes = Aes.Create())
+                    {
+                        aes.GenerateKey();
+                        aes.GenerateIV();
+                        byte[] key = aes.Key;
+                        byte[] iv = aes.IV;
+
+                        // Store the key and IV in a file
+                        KeyIvManager.UpdateKeyAndIv(user.UserName, key, iv);
+
+                        // Hash the user's password using the generated key and IV
+                        user.Password = PasswordHasher.HashPassword(user.Password, key, iv);
+
+                    }
+                }
+                else
+                {
+                    throw new UserException($"No User Found with id : {UserId}");
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new UserException("An error occurred while adding the user to the database.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new UserException("An unexpected error occurred.", ex);
+            }
         }
     }
 }

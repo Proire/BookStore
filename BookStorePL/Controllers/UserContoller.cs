@@ -5,6 +5,7 @@ using BookStoreRL.CustomExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using UserModelLayer;
 
 namespace BookStorePL.Controllers
@@ -76,5 +77,95 @@ namespace BookStorePL.Controllers
                 return responseModel;
             }
         }
+
+        [HttpPost]
+        [Route("/user/forget-password")]
+        public async Task<ResponseModel<string>> ForgetPasswordAsync([FromBody] ForgotPasswordRequest request)
+        {
+            try
+            {
+                var token = await _userService.ForgetPasswordAsync(request.Email);
+
+                // Prepare the response model with token
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "Token generated successfully!",
+                    Data = token,
+                    Status = true
+                };
+
+                return responseModel;
+            }
+            catch (UserException ex)
+            {
+                // Handle the exception and prepare the response model
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = ex.Message,
+                    Data = null,
+                    Status = false
+                };
+
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions and prepare the response model
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "An error occurred while processing your request.",
+                    Data = null,
+                    Status = false
+                };
+
+                return responseModel;
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "UserValidationScheme")]
+        [HttpPost]
+        [Route("/user/reset-password")]
+        public async Task<ResponseModel<string>> ResetPasswordAsync([FromBody] ResetPasswordRequest request)
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                await _userService.ResetPassword(userId, request.NewPassword);
+
+                // Prepare the response model for successful password reset
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "Password reset successful!",
+                    Data = null,
+                    Status = true
+                };
+
+                return responseModel;
+            }
+            catch (UserException ex)
+            {
+                // Handle the exception and prepare the response model
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = ex.Message,
+                    Data = null,
+                    Status = false
+                };
+
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "An error occurred while processing your request.",
+                    Data = null,
+                    Status = false
+                };
+
+                return responseModel;
+            }
+        }
+
     }
 }

@@ -1,12 +1,17 @@
 {
   "johndoe": {
     "UserName": "johndoe",
-    "Key": "RL\u002BpoZU2zqNdO7W5Wk7pDwJBZa\u002BUBWkrzCQLIVNAZiQ=",
-    "Iv": "FhpEpF7fRQWiWqZbx1MyEg=="
+    "Key": "UVYPc4IEA2DFKI6Puhv1UJbUyVFRXTGtdN6UI/I7daA=",
+    "Iv": "ZCD3AIwRxPd0oK4B44rV5A=="
   },
   "Proire": {
     "UserName": "Proire",
-    "Key": "lL9cRwNLwyqKUuoHHti1cFcX8Mvhkv4nK\u002BZSZCHRb/E=",
-    "Iv": "zWBuMHHuKtdcvgyGRg\u002B6yA=="
+    "Key": "HZ\u002BoCjLNVm5dK/l1LgOvq/4LwnAJ6TBS28t0ShuvArM=",
+    "Iv": "mQ8F1R/vIsSyB6kzEG2s\u002BQ=="
+  },
+  "Lucifer": {
+    "UserName": "Lucifer",
+    "Key": "FEMJSC5dMjJoMM3o\u002BAvjAyxs/nk0bQBq1ScVUyeEMMc=",
+    "Iv": "5AC/B6HEfO20Cf\u002BZogEuhQ=="
   }
 }

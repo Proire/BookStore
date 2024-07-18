@@ -51,7 +51,9 @@ internal class Program
         builder.Services.AddScoped<ICustomerDetailsCommandRepository, CustomerDetailsCommandRepository>();
         builder.Services.AddScoped<ICustomerDetailsQueryRepostiory,CustomerDetailsQueryRepository>(); 
 
-        builder.Services.AddScoped<IOrderCommandRepository,OrderCommandRepository>();   
+        builder.Services.AddScoped<IOrderCommandRepository,OrderCommandRepository>();
+
+        builder.Services.AddScoped<EmailSender>();
 
         // Mediator service
         builder.Services.AddMediatR(typeof(Program).Assembly);

@@ -20,10 +20,22 @@ namespace BookStoreBL
             await _mediator.Send(command);
         }
 
+        public async Task<string> ForgetPasswordAsync(string email)
+        {
+            ForgetPasswordCommand command = new ForgetPasswordCommand(email);
+            return await _mediator.Send(command);
+        }
+
         public async Task<string> LoginUserAsync(LoginModel login)
         {
             var command = new LoginUserCommand(login.UserName, login.Password);
             return await _mediator.Send(command);
+        }
+
+        public async Task ResetPassword(int userId, string password)
+        {
+            ResetPasswordCommand command = new ResetPasswordCommand(userId, password);
+            await _mediator.Send(command);
         }
     }
 }
