@@ -142,6 +142,9 @@ namespace BookStoreRL.Services.UserRepository
                         user.Password = PasswordHasher.HashPassword(user.Password, key, iv);
 
                     }
+
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {

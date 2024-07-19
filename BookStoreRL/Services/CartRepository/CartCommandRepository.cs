@@ -97,7 +97,7 @@ namespace BookStoreRL.Services.CardRepository
                 // Find the user's cart
                 var cart = await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId);
 
-                // If the cart is null, create a new cart for the user
+                // If the cart is null, throw exception cart not found user
                 if (cart == null)
                 {
                     throw new CartException("Cart not Found");

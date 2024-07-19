@@ -52,6 +52,7 @@ internal class Program
         builder.Services.AddScoped<ICustomerDetailsQueryRepostiory,CustomerDetailsQueryRepository>(); 
 
         builder.Services.AddScoped<IOrderCommandRepository,OrderCommandRepository>();
+        builder.Services.AddScoped<IOrderQueryRepository, OrderQueryRepository>();  
 
         builder.Services.AddScoped<EmailSender>();
 

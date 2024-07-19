@@ -134,8 +134,7 @@ namespace BookStoreRL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
                 });
@@ -159,12 +158,14 @@ namespace BookStoreRL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookId");
+
                     b.HasIndex("CartId");
 
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("BookStoreRL.Entity.CustomerDetails", b =>
+            modelBuilder.Entity("BookStoreRL.Entity.CustomerDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,25 +215,21 @@ namespace BookStoreRL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BookId")
+                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BookTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("CustomerDetailId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<DateTime>("OrderPlacedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalCartPrice")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CustomerDetailId");
 
                     b.ToTable("Orders");
                 });
@@ -308,8 +305,8 @@ namespace BookStoreRL.Migrations
             modelBuilder.Entity("BookStoreRL.Entity.Cart", b =>
                 {
                     b.HasOne("BookStoreRL.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("BookStoreRL.Entity.Cart", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -318,19 +315,27 @@ namespace BookStoreRL.Migrations
 
             modelBuilder.Entity("BookStoreRL.Entity.CartItem", b =>
                 {
+                    b.HasOne("BookStoreRL.Entity.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BookStoreRL.Entity.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Book");
+
                     b.Navigation("Cart");
                 });
 
-            modelBuilder.Entity("BookStoreRL.Entity.CustomerDetails", b =>
+            modelBuilder.Entity("BookStoreRL.Entity.CustomerDetail", b =>
                 {
                     b.HasOne("BookStoreRL.User", "User")
-                        .WithMany("CustomerDetails")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -340,27 +345,18 @@ namespace BookStoreRL.Migrations
 
             modelBuilder.Entity("BookStoreRL.Entity.Order", b =>
                 {
-                    b.HasOne("BookStoreRL.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
+                    b.HasOne("BookStoreRL.Entity.CustomerDetail", "CustomerDetail")
+                        .WithMany()
+                        .HasForeignKey("CustomerDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("CustomerDetail");
                 });
 
             modelBuilder.Entity("BookStoreRL.Entity.Cart", b =>
                 {
                     b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("BookStoreRL.User", b =>
-                {
-                    b.Navigation("Cart");
-
-                    b.Navigation("CustomerDetails");
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

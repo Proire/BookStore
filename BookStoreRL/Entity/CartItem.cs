@@ -14,6 +14,8 @@ namespace BookStoreRL.Entity
         public Cart Cart { get; set; } // Navigation property for cart
 
         public int BookId { get; set; } // ID of the book
+
+        public Book Book { get; set; }
         public int QuantityToPurchase { get; set; }  // Quantity to purchase
     }
 }

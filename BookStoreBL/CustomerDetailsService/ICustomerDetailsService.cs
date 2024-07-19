@@ -15,6 +15,6 @@ namespace BookStoreBL.CustomerDetailsService
         
         Task UpdateCustomerDetailsAsync(UpdateCustomerDetailsCommand model);
 
-        Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid);
+        Task<ICollection<CustomerDetail>> GetCustomerDetailsAsync(int userid);
     }
 }

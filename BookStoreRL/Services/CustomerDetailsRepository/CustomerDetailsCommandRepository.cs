@@ -20,7 +20,7 @@ namespace BookStoreRL.Services.CustomerDetailsRepository
             _context = context;
         }
 
-        public async Task AddCustomerDetailsAsync(CustomerDetails customerDetails)
+        public async Task AddCustomerDetailsAsync(CustomerDetail customerDetails)
         {
 
             try
@@ -36,7 +36,7 @@ namespace BookStoreRL.Services.CustomerDetailsRepository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCustomerDetailsAsync(CustomerDetails customerDetails)
+        public async Task UpdateCustomerDetailsAsync(CustomerDetail customerDetails)
         {
             var existingCustomer = await _context.CustomerDetails
                 .FirstOrDefaultAsync(c => c.Id == customerDetails.Id);

@@ -20,10 +20,8 @@ namespace BookStoreRL.Services.CartRepository
         }
         public async Task<CartSummaryModel> GetBooksFromCartAsync(int userId)
         {
-            // Fetch the cart associated with the userId
-            var cart = await _context.Carts
-                .Include(c => c.CartItems)
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            // Fetch the cart associated with the userId  -- same as using userid for further reference 
+            var cart = await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
             {
@@ -35,17 +33,13 @@ namespace BookStoreRL.Services.CartRepository
             }
 
             // Extract BookIds from the cart items
-            var bookIds = cart.CartItems.Select(ci => ci.BookId).Distinct();
+            var bookIds = cart.CartItems.Select(ci => ci.BookId);
 
             // Fetch books corresponding to the extracted BookIds
-            var books = await _context.Books
-                .Where(b => bookIds.Contains(b.Id))
-                .ToListAsync();
+            var books = await _context.Books.Where(b => bookIds.Contains(b.Id)).ToListAsync();
 
             // Create a dictionary to map BookId to QuantityToPurchase
-            var bookIdToQuantity = cart.CartItems
-                .GroupBy(ci => ci.BookId)
-                .ToDictionary(g => g.Key, g => g.Sum(ci => ci.QuantityToPurchase));
+            var bookIdToQuantity = cart.CartItems.ToDictionary(g => g.BookId, g => g.QuantityToPurchase);
 
             // Map books to BookDetailModel and calculate total price
             var bookDetails = books.Select(b => new BookDetailModel
@@ -68,6 +62,5 @@ namespace BookStoreRL.Services.CartRepository
                 TotalCartPrice = totalCartPrice
             };
         }
-
     }
 }

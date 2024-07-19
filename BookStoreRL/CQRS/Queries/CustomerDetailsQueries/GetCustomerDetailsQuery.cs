@@ -4,7 +4,7 @@ using BookStoreRL.Entity;
 
 namespace BookStoreRL.CQRS.Queries.CartQueries
 {
-    public class GetCustomerDetailsQuery : IRequest<ICollection<CustomerDetails>>
+    public class GetCustomerDetailsQuery : IRequest<ICollection<CustomerDetail>>
     {
         public int UserId { get; set; }
 

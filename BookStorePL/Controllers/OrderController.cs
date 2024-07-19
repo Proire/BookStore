@@ -25,13 +25,12 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost]
-        [Route("add")]
+        [Route("/order/add")]
         public async Task<ResponseModel<string>> AddOrder([FromBody] OrderModel order)
         {
-            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             try
             {
-                await _orderService.AddOrderAsync(order,userId);
+                await _orderService.AddOrderAsync(order);
 
                 ResponseModel<string> responseModel = new ResponseModel<string>
                 {
@@ -53,6 +52,44 @@ namespace BookStorePL.Controllers
             catch (Exception ex)
             {
                 ResponseModel<string> responseModel = new ResponseModel<string>
+                {
+                    Message = "An unexpected error occurred.",
+                    Status = false
+                };
+                return responseModel;
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+        [HttpGet]
+        [Route("/order/orders")]
+        public async Task<ResponseModel<ICollection<Order>>> GetOrder()
+        {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                var orders = await _orderService.GetAllOrdersAsync(userId);
+
+                ResponseModel<ICollection<Order>> responseModel = new ResponseModel<ICollection<Order>>
+                {
+                    Data = orders,
+                    Message = "Orders retrieved successfully.",
+                    Status = true
+                };
+                return responseModel;
+            }
+            catch (OrderException ex)
+            {
+                ResponseModel<ICollection<Order>> responseModel = new ResponseModel<ICollection<Order>>
+                {
+                    Message = ex.Message,
+                    Status = false
+                };
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                ResponseModel<ICollection<Order>> responseModel = new ResponseModel<ICollection<Order>>
                 {
                     Message = "An unexpected error occurred.",
                     Status = false

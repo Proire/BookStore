@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using BookStoreRL.Entity;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,17 @@ namespace BookStoreRL.CQRS.Commands.OrderCommand
 {
     public class OrderCommand : IRequest
     {
-        public int BookId { get; set; }
+        public int CartId { get; set; }
 
-        public string BookTitle { get; set; }
+        public decimal TotalCartPrice { get; set; }
 
-        public int Quantity { get; set; }
+        public int CustomerDetailsId { get; set; }
 
-        public decimal TotalPrice { get; set; }
-
-        public int UserId { get; set; }
-
-        public OrderCommand(int bookId, string bookTitle, int quantity, decimal totalPrice, int userId) 
+        public OrderCommand(int cartid, decimal totalCartPrice,  int customerdetailsId) 
         { 
-            this.BookId = bookId;
-            this.BookTitle = bookTitle;
-            this.Quantity = quantity;
-            this.TotalPrice = totalPrice;
-            this.UserId = userId;
+            this.CartId = cartid;
+            this.TotalCartPrice = totalCartPrice;
+            this.CustomerDetailsId = customerdetailsId;
         }
     }
 }

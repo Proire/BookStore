@@ -25,7 +25,7 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [HttpPost]
-        [Route("/createBook")]
+        [Route("book/add")]
         public async Task<ResponseModel<string>> CreateBook([FromBody] BookRegistrationModel bookModel)
         {
             try
@@ -52,7 +52,7 @@ namespace BookStorePL.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
-        [HttpPut("{bookId}")]
+        [HttpPut("/book/udpate/{bookId}")]
         public async Task<ResponseModel<Book>> UpdateBook([FromBody] BookUpdateModel bookModel, int bookId)
         {
             try
@@ -77,7 +77,7 @@ namespace BookStorePL.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
-        [HttpDelete("{bookId}")]
+        [HttpDelete("/book/delete/{bookId}")]
         public async Task<ResponseModel<Book>> DeleteBook(int bookId)
         {
             try
@@ -101,7 +101,7 @@ namespace BookStorePL.Controllers
             }
         }
 
-        [HttpGet("{bookId}")]
+        [HttpGet("book/{bookId}")]
         public async Task<ResponseModel<Book>> GetBookById(int bookId)
         {
             try
@@ -134,7 +134,7 @@ namespace BookStorePL.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("/book/books")]
         public async Task<ResponseModel<IEnumerable<Book>>> GetAllBooks()
         {
             try

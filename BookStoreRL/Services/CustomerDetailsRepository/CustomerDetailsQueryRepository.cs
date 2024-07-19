@@ -18,12 +18,12 @@ namespace BookStoreRL.Services.CustomerDetailsRepository
         {
             _context = context;
         }
-        public async Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid)
+        public async Task<ICollection<CustomerDetail>> GetCustomerDetailsAsync(int userid)
         {
             try
             {
-                return await _context.Set<CustomerDetails>()
-                                      .Where(cd => cd.UserId == userid).ToListAsync<CustomerDetails>();
+                return await _context.Set<CustomerDetail>()
+                                      .Where(cd => cd.UserId == userid).ToListAsync<CustomerDetail>();
             }
             catch(Exception ex)
             {

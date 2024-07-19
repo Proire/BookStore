@@ -25,7 +25,7 @@ namespace BookStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost]
-        [Route("addtowishlist")]
+        [Route("/wishlist/addbooktowishlist")]
         public async Task<ResponseModel<Wishlist>> AddBookToWishlist([FromBody] AddWishlistItemModel addWishlistItemModel)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -62,7 +62,7 @@ namespace BookStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpDelete]
-        [Route("deletefromwishlist/{bookId}")]
+        [Route("/wishlist/deletebookfromwishlist/{bookId}")]
         public async Task<ResponseModel<Wishlist>> DeleteBookFromWishlist(int bookId)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -98,9 +98,10 @@ namespace BookStoreAPI.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
-        [HttpGet("{userId}")]
-        public async Task<ResponseModel<IEnumerable<WishlistBookModel>>> GetBooksFromWishlistAsync(int userId)
+        [HttpGet("/wishlist/books")]
+        public async Task<ResponseModel<IEnumerable<WishlistBookModel>>> GetBooksFromWishlistAsync()
         {
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             try
             {
                 // Call the WishListService method to get the wishlist summary

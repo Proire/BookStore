@@ -1,4 +1,5 @@
 ﻿using BookStoreML;
+using BookStoreRL.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace BookStoreBL.OrderService
 {
     public interface IOrderService
     {
-        Task AddOrderAsync(OrderModel order,int userId);
+        Task AddOrderAsync(OrderModel order);
+
+        Task<ICollection<Order>> GetAllOrdersAsync(int userId);
     }
 }

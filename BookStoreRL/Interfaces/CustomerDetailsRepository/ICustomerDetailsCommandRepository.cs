@@ -10,8 +10,8 @@ namespace BookStoreRL.Interfaces.CustomerDetailsRepository
 {
     public interface ICustomerDetailsCommandRepository
     {
-        Task AddCustomerDetailsAsync(CustomerDetails customerDetails);
+        Task AddCustomerDetailsAsync(CustomerDetail customerDetails);
 
-        Task UpdateCustomerDetailsAsync(CustomerDetails customerDetails);
+        Task UpdateCustomerDetailsAsync(CustomerDetail customerDetails);
     }
 }

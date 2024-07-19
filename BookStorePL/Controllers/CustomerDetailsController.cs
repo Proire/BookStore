@@ -23,7 +23,7 @@ namespace BookStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost]
-        [Route("add")]
+        [Route("/customerdetail/add")]
         public async Task<IActionResult> AddCustomerDetails([FromBody] AddCustomerDetailsCommand addCustomerDetails)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -52,7 +52,7 @@ namespace BookStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPut]
-        [Route("edit")]
+        [Route("/customerdetail/edit")]
         public async Task<IActionResult> EditCustomerDetails([FromBody] UpdateCustomerDetailsCommand editCustomerDetails)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -81,16 +81,16 @@ namespace BookStoreAPI.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet]
-        [Route("get")]
+        [Route("/customerdetail/customerdetails")]
         public async Task<IActionResult> GetCustomerDetails()
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             try
             {
-                ICollection<CustomerDetails> customerDetails = await _customerDetailsService.GetCustomerDetailsAsync(userId);
+                ICollection<CustomerDetail> customerDetails = await _customerDetailsService.GetCustomerDetailsAsync(userId);
 
-                return Ok(new ResponseModel<ICollection<CustomerDetails>>
+                return Ok(new ResponseModel<ICollection<CustomerDetail>>
                 {
                     Data = customerDetails,
                     Message = "Customer details retrieved successfully.",

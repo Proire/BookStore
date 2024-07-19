@@ -1,6 +1,7 @@
 ﻿using BookStoreRL.CustomExceptions;
 using BookStoreRL.Entity;
 using BookStoreRL.Interfaces.OrderRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -19,13 +20,28 @@ namespace BookStoreRL.Services.OrderRepository
         {
             try
             {
-                // Call the DbContext method to execute the stored procedure
-                await _context.AddOrderAsync(order);
+                var cart = await _context.Carts.Where(x => x.Id == order.CartId).FirstOrDefaultAsync();
+                if (cart != null)
+                {
+                    cart.IsPurchased = true;
+                    var cartbooks = cart.CartItems.ToList();
+                    var books = await _context.Books.ToListAsync();
+                    foreach(var cartbook in cartbooks)
+                    {
+                        var book = books.Find(x => x.Id == cartbook.Id);
+                        if(book != null)
+                        {
+                            book.StockQuantity -= cartbook.QuantityToPurchase; 
+                        }
+                    }
+                    _context.Books.UpdateRange(books);
+                    _context.Carts.Update(cart);
+                    // Call the DbContext method to execute the stored procedure
+                    await _context.AddOrderAsync(order);
 
-                // Optionally, you can add further processing or validation here
-
-                // Save changes to the DbContext (if needed)
-                await _context.SaveChangesAsync();
+                    // Save changes to the DbContext (if needed)
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

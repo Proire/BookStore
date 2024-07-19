@@ -25,7 +25,7 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost]
-        [Route("/addtocart")]
+        [Route("/cart/addbooks")]
         public async Task<ResponseModel<Cart>> AddToCart([FromBody] AddCartItemModel addCartItemModel)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -62,7 +62,7 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPut]
-        [Route("/updatequantity/{bookId}")]
+        [Route("/cart/updatequantity/{bookId}")]
         public async Task<ResponseModel<Cart>> UpdateQuantityAsync(int bookId, [FromBody] UpdateQuantityModel updateQuantityModel)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -99,7 +99,7 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet]
-        [Route("books")]
+        [Route("/cart/books")]
         public async Task<ResponseModel<CartSummaryModel>> GetBooksFromCartAsync()
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -147,7 +147,7 @@ namespace BookStorePL.Controllers
 
         [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpDelete]
-        [Route("/deletebook/{bookId}")]
+        [Route("/cart/deletebook/{bookId}")]
         public async Task<ResponseModel<Cart>> DeleteBookFromCartAsync(int bookId)
         {
             int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);

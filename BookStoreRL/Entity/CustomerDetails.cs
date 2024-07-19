@@ -11,7 +11,7 @@ using BookStoreML;
 
 namespace BookStoreRL.Entity
 {
-    public class CustomerDetails
+    public class CustomerDetail
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -31,6 +31,6 @@ namespace BookStoreRL.Entity
 
         public int UserId { get; set; } 
 
-        public User User { get; set; }  
+        public User User { get; set; }
     }
 }

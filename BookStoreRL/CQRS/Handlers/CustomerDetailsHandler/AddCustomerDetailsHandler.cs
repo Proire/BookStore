@@ -22,7 +22,7 @@ namespace BookStoreRL.CQRS.Handlers.CustomerDetailsHandler
         public async Task<Unit> Handle(AddCustomerDetailsCommand request, CancellationToken cancellationToken)
         {
             // Create a CustomerDetails object from the command
-            var customerDetails = new CustomerDetails
+            var customerDetails = new CustomerDetail
             {
                 AddressType = request.AddressType,
                 FullAddress = request.FullAddress,

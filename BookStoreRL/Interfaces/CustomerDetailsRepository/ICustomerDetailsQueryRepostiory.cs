@@ -9,6 +9,6 @@ namespace BookStoreRL.Interfaces.CustomerDetailsRepository
 {
     public interface ICustomerDetailsQueryRepostiory
     {
-        Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid);
+        Task<ICollection<CustomerDetail>> GetCustomerDetailsAsync(int userid);
     }
 }

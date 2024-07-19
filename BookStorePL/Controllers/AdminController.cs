@@ -21,7 +21,7 @@ namespace BookStorePL.Controllers
         }
 
         [HttpPost]
-        [Route("/createadmin")]
+        [Route("/admin/register")]
         public async Task<ResponseModel<User>> CreateAdmin([FromBody] UserRegistrationModel user)
         {
             try

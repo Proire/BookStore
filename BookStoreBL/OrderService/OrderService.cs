@@ -1,5 +1,7 @@
 ﻿using BookStoreML;
 using BookStoreRL.CQRS.Commands.OrderCommand;
+using BookStoreRL.CQRS.Queries.OrderQueries;
+using BookStoreRL.Entity;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -17,10 +19,16 @@ namespace BookStoreBL.OrderService
         {
             _mediator = mediator;
         }
-        public async Task AddOrderAsync(OrderModel order,int userId)
+        public async Task AddOrderAsync(OrderModel order)
         {
-            OrderCommand command = new OrderCommand(order.BookId, order.BookTitle, order.Quantity, order.TotalPrice, userId);
+            OrderCommand command = new OrderCommand(order.CartId, order.TotalCartPrice, order.CustomerDetailsId);
             await _mediator.Send(command);  
+        }
+
+        public async Task<ICollection<Order>> GetAllOrdersAsync(int userId)
+        {
+            GetOrdersQuery command = new GetOrdersQuery(userId);
+            return await _mediator.Send(command);
         }
     }
 }

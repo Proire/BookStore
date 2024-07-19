@@ -19,7 +19,7 @@ namespace BookStoreRL
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
 
-        public DbSet<CustomerDetails> CustomerDetails { get; set; }
+        public DbSet<CustomerDetail> CustomerDetails { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 
@@ -39,19 +39,17 @@ namespace BookStoreRL
             var books = await Books.FromSqlRaw("EXEC GetAllBooks").ToListAsync();
             return books;
         }
-        public async Task AddOrderAsync(Order order)
+        public async Task AddOrderAsync(Entity.Order order)
         {
-            // Define the parameters for the stored procedure
-            var bookIdParam = new SqlParameter("@BookId", order.BookId);
-            var bookTitleParam = new SqlParameter("@BookTitle", order.BookTitle);
-            var quantityParam = new SqlParameter("@Quantity", order.Quantity);
-            var totalPriceParam = new SqlParameter("@TotalPrice", order.TotalPrice);
-            var userIdParam = new SqlParameter("@UserId", order.UserId);
+            var cartIdParam = new SqlParameter("@CartId", order.CartId);
+            var totalCartPriceParam = new SqlParameter("@TotalCartPrice", order.TotalCartPrice);
+            var orderPlacedDateTimeParam = new SqlParameter("@OrderPlacedDateTime", order.OrderPlacedDateTime);
+            var customerDetailParam = new SqlParameter("@CustomerDetailId", order.CustomerDetailId);
 
             // Execute the stored procedure
             await Database.ExecuteSqlRawAsync(
-                "EXEC AddOrder @BookId, @BookTitle, @Quantity, @TotalPrice, @UserId",
-                bookIdParam, bookTitleParam, quantityParam, totalPriceParam, userIdParam
+                "EXEC AddOrder @CartId, @TotalCartPrice, @OrderPlacedDateTime, @CustomerDetailId",
+                cartIdParam, totalCartPriceParam, orderPlacedDateTimeParam, customerDetailParam
             );
         }
 
@@ -106,18 +104,11 @@ namespace BookStoreRL
                 entity.Property(e => e.Rating).HasColumnType("float");
             });
 
-            modelBuilder.Entity<Order>(entity =>
+            modelBuilder.Entity<Entity.Order>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.TotalCartPrice).HasColumnType("decimal(18, 2)");
             });
-
-            // Configure one-to-one relationship between User and Cart
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Cart)
-                .WithOne(c => c.User)
-                .HasForeignKey<Cart>(c => c.UserId)
-                .IsRequired();
 
             // Configure one-to-many relationship between Cart and CartItem
             modelBuilder.Entity<Cart>()
@@ -125,19 +116,6 @@ namespace BookStoreRL
                 .WithOne(ci => ci.Cart)
                 .HasForeignKey(ci => ci.CartId)
                 .IsRequired();
-
-            modelBuilder.Entity<User>()
-               .HasMany(u => u.CustomerDetails)
-               .WithOne(cd => cd.User)
-               .HasForeignKey(cd => cd.UserId)
-               .IsRequired();
-
-            // Configure one-to-many relationship between User and Order
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Orders)
-                .WithOne(o => o.User)
-                .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

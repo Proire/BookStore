@@ -16,15 +16,14 @@ namespace BookStoreRL.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int BookId { get; set; }
+        public int CartId {  get; set; }    
 
-        public string BookTitle {  get; set; }
 
-        public int Quantity { get; set; }   
+        public decimal TotalCartPrice { get; set; } 
 
-        public decimal TotalPrice { get; set; } 
+        public DateTime OrderPlacedDateTime { get; set; } = DateTime.UtcNow;
 
-        public int UserId {  get; set; }    
-        public User User { get; set; }  
+        public int CustomerDetailId {  get; set; }    
+        public CustomerDetail CustomerDetail { get; set; }  
     }
 }

@@ -25,7 +25,7 @@ namespace BookStoreBL.CustomerDetailsService
             await _mediator.Send(command);
         }
 
-        public async Task<ICollection<CustomerDetails>> GetCustomerDetailsAsync(int userid)
+        public async Task<ICollection<CustomerDetail>> GetCustomerDetailsAsync(int userid)
         {
             GetCustomerDetailsQuery command = new GetCustomerDetailsQuery(userid);
             return await _mediator.Send(command);

@@ -23,11 +23,5 @@ namespace BookStoreRL
         public string Phonenumber { get; set; } = string.Empty;
 
         public DateTime DateOfBirth { get; set; } = new DateTime();
-
-        public Cart? Cart { get; set; }
-
-        public ICollection<CustomerDetails>? CustomerDetails { get; set; }
-
-        public ICollection<Order> Orders { get; set; }  
     }
 }

@@ -22,7 +22,7 @@ namespace BookStorePL.Controllers
         }
 
         [HttpPost]
-        [Route("/registerUser")]
+        [Route("/user/register")]
         public async Task<ResponseModel<User>> CreateUser([FromBody] UserRegistrationModel user)
         {
             try

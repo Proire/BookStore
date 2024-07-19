@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreRL.CQRS.Queries.BookQueries
 {
-    public class GetCustomerDetailsQueryHandler : IRequestHandler<GetCustomerDetailsQuery, ICollection<CustomerDetails>>
+    public class GetCustomerDetailsQueryHandler : IRequestHandler<GetCustomerDetailsQuery, ICollection<CustomerDetail>>
     {
         private readonly ICustomerDetailsQueryRepostiory _cartQueryRepository;
 
@@ -20,7 +20,7 @@ namespace BookStoreRL.CQRS.Queries.BookQueries
             _cartQueryRepository = cartQueryRepository;
         }
 
-        public async Task<ICollection<CustomerDetails>> Handle(GetCustomerDetailsQuery request, CancellationToken cancellationToken)
+        public async Task<ICollection<CustomerDetail>> Handle(GetCustomerDetailsQuery request, CancellationToken cancellationToken)
         {
             return await _cartQueryRepository.GetCustomerDetailsAsync(request.UserId);
         }

@@ -23,7 +23,7 @@ namespace BookStoreRL.CQRS.Handlers.OrderHandler
 
         public async Task<Unit> Handle(OrderCommand request, CancellationToken cancellationToken)
         {
-            Order order = new Order() { BookId = request.BookId,BookTitle=request.BookTitle,Quantity=request.Quantity,TotalPrice=request.TotalPrice,UserId=request.UserId};
+            Order order = new Order() { CartId = request.CartId, TotalCartPrice = request.TotalCartPrice, CustomerDetailId = request.CustomerDetailsId };
             await _wishListCommandRepository.AddOrderAsync(order);
             return Unit.Value;
         }
