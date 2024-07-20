@@ -20,7 +20,7 @@ namespace BookStoreRL.Services.OrderRepository
         {
             try
             {
-                var cart = await _context.Carts.Where(x => x.Id == order.CartId).FirstOrDefaultAsync();
+                var cart = await _context.Carts.Include(x => x.CartItems).Where(x => x.Id == order.CartId).FirstOrDefaultAsync();
                 if (cart != null)
                 {
                     cart.IsPurchased = true;
@@ -28,7 +28,7 @@ namespace BookStoreRL.Services.OrderRepository
                     var books = await _context.Books.ToListAsync();
                     foreach(var cartbook in cartbooks)
                     {
-                        var book = books.Find(x => x.Id == cartbook.Id);
+                        var book = books.Find(x => x.Id == cartbook.BookId);
                         if(book != null)
                         {
                             book.StockQuantity -= cartbook.QuantityToPurchase; 
